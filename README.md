@@ -16,6 +16,9 @@ module.exports = {
     password: 'db_password',
     database: 'db_name',
     host: 'db_host'
+  },
+  scoutlitCouchDb: {
+    host: 'http://couchdb_host:5984'
   }
 }
 ```
