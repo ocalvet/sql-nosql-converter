@@ -9,14 +9,21 @@ class SQLToNoSQLConverter {
       .then((user) => {
         return this.couchDbConnector.createDocument('users', user);
       })
+      .then((user) => { return this.couchDbConnector.getDocument('users', user.id); })
       .then((user) => {
-        return this.couchDbConnector.getDocument('users', user.id);
+        return this.sqlConnector.getCoachTeams(user.UserID);
       })
-      .then((user) => {
-        console.log('user', user);
+      .then((teams) => {
+        var doc = { docs: teams };
+        return this.couchDbConnector.createDocument('teams', doc, true);
+      })
+      .then((teams) => {
+        console.log('teams created', teams);
+        this.sqlConnector.endDbConnection();
       })
       .catch((err) => {
         console.log('error:', err);
+        this.sqlConnector.endDbConnection();
       });
   }
 }

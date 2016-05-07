@@ -6,11 +6,13 @@ class CouchDbConnector {
     this.config = config;
   }
   
-  createDocument(db, document) {
+  createDocument(db, document, bulk) {
     return new Promise((resolve, reject) => {
+      let url = this.config.host + '/' + db + (bulk ? '/_bulk_docs' : '');
+      console.log('url - ' + url);
       request({
           method: 'POST',
-          url: this.config.host + '/' + db,
+          url: url,
           json: document
         }, (err, resp, body) => {
           console.log('here', err, resp, body);
