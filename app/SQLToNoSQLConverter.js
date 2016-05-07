@@ -7,17 +7,17 @@ class SQLToNoSQLConverter {
     this.couchDbConnector = new CouchDbConnector(config.scoutlitCouchDb);
     this.sqlConnector.getUser(47)
       .then((user) => {
-        console.log('User data', user.FirstName);
-        // this.couchDbConnector.createDocument('users', user);
-        return this.couchDbConnector.getDocuments('stats');
+        return this.couchDbConnector.createDocument('users', user);
       })
-      .then((stats) => {
-        return this.couchDbConnector.getDocument('stats', stats[0].id);
+      .then((user) => {
+        return this.couchDbConnector.getDocument('users', user.id);
       })
-      .then((stat) => {
-        console.log('stat', stat);
+      .then((user) => {
+        console.log('user', user);
       })
-      .catch((err) => console.log('error:', err));
+      .catch((err) => {
+        console.log('error:', err);
+      });
   }
 }
 

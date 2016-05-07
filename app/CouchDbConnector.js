@@ -7,7 +7,20 @@ class CouchDbConnector {
   }
   
   createDocument(db, document) {
-    
+    return new Promise((resolve, reject) => {
+      request({
+          method: 'POST',
+          url: this.config.host + '/' + db,
+          json: document
+        }, (err, resp, body) => {
+          console.log('here', err, resp, body);
+          if (!err && (resp.statusCode >= 200 || resp.statusCode < 300)) {
+            resolve(body);
+          } else {
+            reject(err);
+          }
+        });
+    });
   }
   
   getDocument(db, id) {
