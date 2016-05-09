@@ -37,6 +37,14 @@ class SQLConnector {
     return this.runQuery('select * from user_image where userid = ?', [userId]);
   }
   
+  getUserStats(userId) {
+    return this.runQuery('select * from stat where coachId = ?', [userId]);  
+  }
+  
+  getTeamGames(teamId) {
+    return this.runQuery('select * from game where teamid = ?', [teamId]);        
+  }
+  
   endDbConnection() {
         this.con.end();
   }
