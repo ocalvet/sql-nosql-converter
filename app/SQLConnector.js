@@ -45,6 +45,34 @@ class SQLConnector {
     return this.runQuery('select * from game where teamid = ?', [teamId]);        
   }
   
+  getTeamImages(teamId) {
+    return this.runQuery('select * from team_image where teamid = ?', [teamId]);  
+  }
+  
+  getGameStatValues(gameId) {
+    return this.runQuery('select * from stat_value where gameid = ?', [gameId]);
+  }
+  
+  getGameLiveStats(gameId) {
+    return this.runQuery('select * from live_stat where gameid = ?', [gameId]);
+  }
+
+  getGameAttributeValues(gameId) {
+    return this.runQuery('select * from game_attribute_value where gameid = ?', [gameId]);
+  }
+  
+  getSports() {
+    return this.runQuery('select * from sport', []);
+  }
+  
+  getGameAttributes() {
+    return this.runQuery('select * from game_attribute', []);
+  }
+  
+  getLocations() {
+    return this.runQuery('select * from location', []);
+  }
+  
   endDbConnection() {
         this.con.end();
   }

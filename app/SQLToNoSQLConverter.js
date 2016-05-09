@@ -6,6 +6,7 @@ class SQLToNoSQLConverter {
     this.sqlConnector = new SQLConnector(config.scoutlitSQL);
     this.couchDbConnector = new CouchDbConnector(config.scoutlitCouchDb);
     this.user = undefined;
+    this.games = undefined;
     console.log('getting the user');
     this.sqlConnector.getUser(47)
       // Create the user
@@ -67,7 +68,7 @@ class SQLToNoSQLConverter {
         console.log('getting stats');
         return this.sqlConnector.getUserStats(this.user.UserID);
       })
-      // add all the user_images to couchdb
+      // add all the stats to couchdb
       .then((stats) => {
         console.log('creating stats');
         this.user.stats = stats;
@@ -77,23 +78,69 @@ class SQLToNoSQLConverter {
       // Get all the games for each team
       .then(() => {
         console.log('getting games');
-        var gamesPromises = [];
+        var promises = [];
         this.user.teams.forEach((team) => {
-          gamesPromises.push(this.sqlConnector.getTeamGames(team.TeamID));
+          promises.push(this.sqlConnector.getTeamGames(team.TeamID));
         })
-        return Promise.all(gamesPromises);
+        return Promise.all(promises);
       })
       // add all the games to couchdb
-      .then((gamesCollection) => {
+      .then((collection) => {
         console.log('creating games');
-        var allGames = [];
-        gamesCollection.forEach((games) => {
-          allGames = allGames.concat(games);
+        var data = [];
+        collection.forEach((d) => {
+          data = data.concat(d);
         });
-        console.log('games = ', allGames);
-        var doc = { docs: allGames };
+        this.games = data;
+        var doc = { docs: data };
         return this.couchDbConnector.createDocument('games', doc, true);
       })
+      // Get all the team_images for each team
+      .then(() => {
+        console.log('getting team_images');
+        var promises = [];
+        this.user.teams.forEach((team) => {
+          promises.push(this.sqlConnector.getTeamImages(team.TeamID));
+        })
+        return Promise.all(promises);
+      })
+      // add all the games to couchdb
+      .then((collection) => {
+        console.log('creating team_images');
+        var data = [];
+        collection.forEach((d) => {
+          data = data.concat(d);
+        });
+        var doc = { docs: data };
+        return this.couchDbConnector.createDocument('team_images', doc, true);
+      })
+      // Get all the stat_values for each game
+      .then(() => {
+        console.log('getting stat_value');
+        var promises = [];
+        this.games.forEach((game) => {
+          promises.push(this.sqlConnector.getGameStats(game.GameID));
+        })
+        return Promise.all(promises);
+      })
+      // add all the stat_values to couchdb
+      .then((collection) => {
+        console.log('creating stat_value');
+        var data = [];
+        collection.forEach((d) => {
+          data = data.concat(d);
+        });
+        var doc = { docs: data };
+        return this.couchDbConnector.createDocument('stat_values', doc, true);
+      })
+      
+      // stat_value
+      // live_stat
+      // game_attribute_value
+      // location
+      // sport
+      // game_atttributes
+      // stat -1 coach
       
       // And done...
       .then(() => {
