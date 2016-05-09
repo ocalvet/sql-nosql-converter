@@ -15,6 +15,7 @@ class SQLToNoSQLConverter {
       .then((user) => {
         return this.sqlConnector.getCoachTeams(user.UserID);
       })
+      // Add all the teams to the user
       .then((teams) => {
         var doc = { docs: teams };
         return this.couchDbConnector.createDocument('teams', doc, true);
