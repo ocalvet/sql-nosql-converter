@@ -119,7 +119,7 @@ class SQLToNoSQLConverter {
         console.log('getting stat_value');
         var promises = [];
         this.games.forEach((game) => {
-          promises.push(this.sqlConnector.getGameStats(game.GameID));
+          promises.push(this.sqlConnector.getGameStatValues(game.GameID));
         })
         return Promise.all(promises);
       })
@@ -130,11 +130,11 @@ class SQLToNoSQLConverter {
         collection.forEach((d) => {
           data = data.concat(d);
         });
+        console.log('total stats: ', data.length);
         var doc = { docs: data };
         return this.couchDbConnector.createDocument('stat_values', doc, true);
       })
       
-      // stat_value
       // live_stat
       // game_attribute_value
       // location
