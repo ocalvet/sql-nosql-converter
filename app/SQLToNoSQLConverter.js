@@ -6,8 +6,6 @@ class SQLToNoSQLConverter {
     this.sqlConnector = new SQLConnector(config.scoutlitSQL);
     this.couchDbConnector = new CouchDbConnector(config.scoutlitCouchDb);
     this.user = undefined;
-    this.teams = undefined;
-    this.passports = undefined;
     console.log('getting the user');
     this.sqlConnector.getUser(47)
       // Create the user
@@ -17,17 +15,17 @@ class SQLToNoSQLConverter {
         return this.couchDbConnector.createDocument('users', this.user);
       })
       // Get all the teams this coach coaches
-      .then(() => {
-        console.log('getting the teams');
-        return this.sqlConnector.getCoachTeams(this.user.UserID);
-      })
-      // Add all the teams to couchdb
-      .then((teams) => {
-        console.log('creating the teams');
-        this.teams = teams;
-        var doc = { docs: teams };
-        return this.couchDbConnector.createDocument('teams', doc, true);
-      })
+      // .then(() => {
+      //   console.log('getting the teams');
+      //   return this.sqlConnector.getCoachTeams(this.user.UserID);
+      // })
+      // // Add all the teams to couchdb
+      // .then((teams) => {
+      //   console.log('creating the teams');
+      //   this.user.teams = teams;
+      //   var doc = { docs: teams };
+      //   return this.couchDbConnector.createDocument('teams', doc, true);
+      // })
       // Get all the passports for the user
       .then(() => {
         console.log('getting passports');
@@ -36,9 +34,21 @@ class SQLToNoSQLConverter {
       // add all the passports to couchdb
       .then((passports) => {
         console.log('creating passports');
-        this.passports = passports;
+        this.user.passports = passports;
         var doc = { docs: passports };
         return this.couchDbConnector.createDocument('passports', doc, true);
+      })
+      // Get all the user_image for the user
+      .then(() => {
+        console.log('getting user_images');
+        return this.sqlConnector.getUserImages(this.user.UserID);
+      })
+      // add all the user_images to couchdb
+      .then((images) => {
+        console.log('creating user_images');
+        this.user.images = images;
+        var doc = { docs: images };
+        return this.couchDbConnector.createDocument('user_images', doc, true);
       })
       
       // And done...

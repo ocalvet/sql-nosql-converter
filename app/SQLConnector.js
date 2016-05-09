@@ -33,6 +33,10 @@ class SQLConnector {
      return this.runQuery('select * from passport where user = ?', [userId]);
   }
   
+  getUserImages(userId) {
+    return this.runQuery('select * from user_image where userid = ?', [userId]);
+  }
+  
   endDbConnection() {
         this.con.end();
   }
