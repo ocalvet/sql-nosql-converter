@@ -6,10 +6,12 @@ class SQLToNoSQLConverter {
     this.sqlConnector = new SQLConnector(config.scoutlitSQL);
     this.couchDbConnector = new CouchDbConnector(config.scoutlitCouchDb);
     this.sqlConnector.getUser(47)
+      // Create the user
       .then((user) => {
         return this.couchDbConnector.createDocument('users', user);
       })
       .then((user) => { return this.couchDbConnector.getDocument('users', user.id); })
+      // Get all the teams for the user
       .then((user) => {
         return this.sqlConnector.getCoachTeams(user.UserID);
       })
