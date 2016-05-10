@@ -9,7 +9,7 @@ class SQLToNoSQLConverter {
     this.games = undefined;
  
     console.log('getting the user');
-    this.sqlConnector.getUser(47)
+    this.sqlConnector.getUser(73)
       // Create the user
       .then((users) => {
         console.log('creating the user');
