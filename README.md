@@ -11,13 +11,13 @@ Add a config.js file to the root of the folder using the following format:
 
 ```
 module.exports = {
-  scoutlitSQL: {
+  mysql: {
     user: 'db_user',
     password: 'db_password',
     database: 'db_name',
     host: 'db_host'
   },
-  scoutlitCouchDb: {
+  couchdb: {
     host: 'http://couchdb_host:5984'
   }
 }
